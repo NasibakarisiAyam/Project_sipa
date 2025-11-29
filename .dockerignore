@@ -1,0 +1,12 @@
+.git
+.gitignore
+node_modules
+vendor
+tmp
+.env
+backend/.env
+*.log
+*.cache
+docker-compose.override.yml
+/.idea
+/.vscode

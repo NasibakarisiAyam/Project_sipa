@@ -1,0 +1,1290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BOOKFLIX - Profile</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+        }
+
+        body {
+            background-color: #141414;
+            color: white;
+            padding-top: 120px;
+        }
+
+        .navbar {
+            display: flex;
+            align-items: center;
+            padding: 20px 50px;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0) 100%);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            color: #e50914;
+            font-size: 2rem;
+            font-weight: bold;
+            margin-right: 40px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-size: 1rem;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: #b3b3b3;
+        }
+
+        .nav-links a.active {
+            font-weight: bold;
+            color: white;
+        }
+
+        .right-nav {
+            display: flex;
+            align-items: center;
+            margin-left: auto;
+            gap: 30px;
+        }
+
+        .profile-picture-container {
+                width: 180px;
+                height: 180px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+        .profile-picture-large {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background-color: #333;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            position: relative;
+            border: 3px solid #e50914;
+        }
+
+        .profile-picture-large img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .profile-picture-large .initials {
+            font-size: 3rem;
+            font-weight: bold;
+        }
+
+        .edit-profile-pic {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            background-color: #e50914;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .profile-pic {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #e50914;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .profile-pic img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .profile-pic .initials {
+            font-weight: bold;
+            font-size: 1rem;
+        }
+
+        .profile-dropdown {
+            display: none;
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background-color: rgba(0,0,0,0.9);
+            min-width: 180px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .profile-dropdown a {
+            color: white;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            font-size: 0.9rem;
+            transition: background-color 0.3s;
+        }
+
+        .profile-dropdown a:hover {
+            background-color: #333;
+        }
+
+        .user-profile:hover .profile-dropdown {
+            display: block;
+        }
+
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: rgba(0,0,0,0.9);
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+            border-radius: 4px;
+        }
+
+        .dropdown-content a {
+            color: white;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            font-size: 0.9rem;
+        }
+
+        .dropdown-content a:hover {
+            background-color: #333;
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        /* Profile Page Styles */
+        .profile-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .profile-header {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 40px;
+            width: 100%;
+        }
+
+        .profile-picture-container {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .profile-picture-large {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background-color: #333;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            position: relative;
+            border: 3px solid #e50914;
+        }
+
+        .profile-picture-large img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .profile-picture-large .initials {
+            font-size: 3rem;
+            font-weight: bold;
+        }
+
+        .edit-profile-pic {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            background-color: #e50914;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .edit-profile-pic:hover {
+            transform: scale(1.1);
+        }
+
+        .profile-loading {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            display: none;
+        }
+
+        .spinner {
+            width: 30px;
+            height: 30px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: #e50914;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .profile-info {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .profile-info h1 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .profile-info p {
+            color: #b3b3b3;
+            font-size: 1.1rem;
+        }
+
+        .profile-books {
+            width: 100%;
+        }
+
+        .profile-books h2 {
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+            border-bottom: 2px solid #e50914;
+            padding-bottom: 10px;
+            display: inline-block;
+        }
+
+        .book-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 25px;
+            width: 100%;
+        }
+
+        .book-card {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            transition: transform 0.3s;
+            cursor: pointer;
+        }
+
+        .book-card:hover {
+            transform: scale(1.05);
+        }
+
+        .book {
+            width: 100%;
+            height: 300px;
+        }
+
+        .book img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 4px;
+        }
+
+        .book-title {
+            font-size: 0.9rem;
+            text-align: center;
+            margin-top: 5px;
+            line-height: 1.3;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .book-detail-info {
+            font-size: 0.8rem;
+            color: #b3b3b3;
+            text-align: center;
+            margin-top: 2px;
+        }
+
+        .book-detail-info {
+            font-size: 0.8rem;
+            color: #b3b3b3;
+            text-align: center;
+            margin-top: 2px;
+        }
+
+        .book-detail-info {
+            font-size: 0.8rem;
+            color: #b3b3b3;
+            text-align: center;
+            margin-top: 2px;
+        }
+
+        .logout-btn {
+            background-color: #e50914;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            font-size: 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 30px;
+            transition: background-color 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logout-btn:hover {
+            background-color: #f40612;
+        }
+
+        .logout-loading {
+            display: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        .add-book-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background-color: #e50914;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s, background-color 0.3s;
+            z-index: 99;
+        }
+
+        .add-book-btn:hover {
+            background-color: #f40612;
+            transform: scale(1.1);
+        }
+
+        .add-book-btn i {
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: #181818;
+            padding: 30px;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 500px;
+            position: relative;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #b3b3b3;
+        }
+
+        .close-modal:hover {
+            color: white;
+        }
+
+        .modal-title {
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+            text-align: center;
+        }
+
+        .photo-options {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .photo-option {
+            background-color: #333;
+            border: none;
+            color: white;
+            padding: 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .photo-option:hover {
+            background-color: #444;
+        }
+
+        #camera-preview {
+            width: 100%;
+            max-height: 300px;
+            object-fit: contain;
+            background-color: #222;
+            display: none;
+            margin: 15px 0;
+            border-radius: 4px;
+        }
+
+        .camera-controls {
+            display: none;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .capture-btn {
+            background-color: #e50914;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .capture-btn:hover {
+            background-color: #f40612;
+        }
+
+        #file-input {
+            display: none;
+        }
+
+        .preview-image {
+            max-width: 100%;
+            max-height: 300px;
+            display: none;
+            margin: 15px auto;
+            border-radius: 4px;
+        }
+
+        .confirm-btns {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+            justify-content: center;
+        }
+
+        .confirm-btn {
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            border: none;
+        }
+
+        .confirm-save {
+            background-color: #e50914;
+            color: white;
+        }
+
+        .confirm-save:hover {
+            background-color: #f40612;
+        }
+
+        .confirm-cancel {
+            background-color: #333;
+            color: white;
+        }
+
+        .confirm-cancel:hover {
+            background-color: #444;
+        }
+
+        /* Add Book Modal */
+        .add-book-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .add-book-content {
+            background-color: #181818;
+            padding: 30px;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .book-selection {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .select-book-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .select-book-card:hover {
+            transform: scale(1.05);
+        }
+
+        .select-book-card.selected {
+            border: 2px solid #e50914;
+            border-radius: 4px;
+            padding: 5px;
+        }
+
+        .select-book-cover {
+            width: 100%;
+            height: 160px;
+            object-fit: cover;
+            border-radius: 4px;
+        }
+
+        .select-book-title {
+            font-size: 0.8rem;
+            text-align: center;
+            margin-top: 5px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        @media (max-width: 768px) {
+            .profile-container {
+                padding: 20px;
+            }
+
+            .book-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+                gap: 15px;
+            }
+
+            .book {
+                height: 225px;
+            }
+
+            .navbar {
+                padding: 15px 20px;
+                flex-wrap: wrap;
+            }
+
+            .right-nav {
+                order: 1;
+                width: 100%;
+                margin-top: 15px;
+                justify-content: space-between;
+            }
+        }
+
+        /* === Upload Option Modal === */
+        #uploadOptionModal {
+        display: none; /* default hidden */
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0,0,0,0.8);
+        z-index: 2000;
+        justify-content: center;
+        align-items: center;
+        }
+
+        #uploadOptionModal .modal-content {
+        background-color: #181818;
+        color: #fff;
+        padding: 30px;
+        border-radius: 12px;
+        width: 90%;
+        max-width: 400px;
+        text-align: center;
+        position: relative;
+        box-shadow: 0 0 20px rgba(0,0,0,0.6);
+        }
+
+        #uploadOptionModal .modal-title {
+        margin-bottom: 20px;
+        font-size: 1.3rem;
+        color: #e5e5e5;
+        }
+
+        #uploadOptionModal .close-modal {
+        position: absolute;
+        top: 12px;
+        right: 15px;
+        font-size: 1.5rem;
+        cursor: pointer;
+        color: #aaa;
+        transition: color 0.2s ease;
+        }
+        #uploadOptionModal .close-modal:hover {
+        color: #fff;
+        }
+
+        #uploadOptionModal .photo-option {
+        display: block;
+        width: 100%;
+        background: #e50914; /* Netflix red style */
+        border: none;
+        padding: 12px 15px;
+        margin: 10px 0;
+        font-size: 1rem;
+        border-radius: 8px;
+        cursor: pointer;
+        color: #fff;
+        font-weight: 500;
+        transition: background 0.3s ease, transform 0.2s ease;
+        }
+
+        #uploadOptionModal .photo-option i {
+        margin-right: 8px;
+        }
+
+        #uploadOptionModal .photo-option:hover {
+        background: #f6121d;
+        transform: translateY(-2px);
+        }
+
+        @media (max-width: 480px) {
+            .logo {
+                font-size: 1.5rem;
+                margin-right: 20px;
+            }
+
+            .nav-links {
+                gap: 10px;
+            }
+
+            .right-nav {
+                gap: 15px;
+            }
+
+            .search-input {
+                padding: 8px 15px;
+                padding-right: 35px;
+            }
+
+            .profile-pic {
+                width: 35px;
+                height: 35px;
+            }
+
+            .profile-picture-large {
+                width: 120px;
+                height: 120px;
+            }
+
+            .profile-info h1 {
+                font-size: 1.5rem;
+            }
+
+            .add-book-btn {
+                width: 50px;
+                height: 50px;
+                bottom: 20px;
+                right: 20px;
+            }
+        }
+
+        /* === CAMERA MODAL === */
+        #cameraModal .modal-content {
+            background: #1e1e1e;
+            color: #fff;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        #cameraPreview {
+            border-radius: 12px;
+            border: 2px solid #444;
+            margin-bottom: 15px;
+            background: #000;
+        }
+
+        /* Tombol kamera */
+        .camera-controls button {
+            background: #e50914;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+        .camera-controls button:hover {
+            background: #b20710;
+        }
+        #cancelPhotoBtn {
+            background: #444;
+        }
+        #cancelPhotoBtn:hover {
+            background: #666;
+        }
+
+        /* === PROFILE PIC PREVIEW MODAL === */
+        #profilePicModal .modal-content {
+            background: #1e1e1e;
+            color: #fff;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        /* Tombol Save/Cancel */
+        .confirm-btns button {
+            background: #e50914;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 5px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+        .confirm-btns button:hover {
+            background: #b20710;
+        }
+        .confirm-cancel {
+            background: #444;
+        }
+        .confirm-cancel:hover {
+            background: #666;
+        }
+
+        .modal-content {
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        #profile-pic-preview {
+            animation: glowPulse 2s infinite alternate;
+        }
+
+        @keyframes glowPulse {
+            from { box-shadow: 0 0 10px rgba(229, 9, 20, 0.4); }
+            to { box-shadow: 0 0 20px rgba(229, 9, 20, 0.8); }
+        }
+
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <div class="logo">BOOKFLIX</div>
+        <div class="nav-links">
+            <a href="halaman1.html" id="home-link">Home</a>
+            <div class="dropdown">
+                <a href="#" id="genre-link">Genre <i class="fas fa-caret-down"></i></a>
+                <div class="dropdown-content">
+                    <a href="halaman1.html" data-genre="all">All Genres</a>
+                    <a href="halaman1.html" data-genre="horror">Horror</a>
+                    <a href="halaman1.html" data-genre="romance">Romance</a>
+                    <a href="halaman1.html" data-genre="fantasy">Fantasy</a>
+                    <a href="halaman1.html" data-genre="thriller">Thriller</a>
+                </div>
+            </div>
+            <a href="halaman1.html" id="popular-link">Popular</a>
+            <a href="halaman1.html" id="mylist-link">My List</a>
+        </div>
+        <div class="right-nav">
+            <div class="user-profile">
+                <div class="profile-pic" id="nav-profile-pic">
+                    <div class="initials" id="nav-profile-initials">U</div>
+                    <img id="nav-profile-image" src="" alt="Profile Picture" style="display: none;">
+                </div>
+                <div class="profile-dropdown">
+                    <a href="profile.html"><i class="fas fa-user"></i> Profile</a>
+                    <a href="#"><i class="fas fa-cog"></i> Settings</a>
+                    <a href="backend/logout.php" id="logout-link"><i class="fas fa-sign-out-alt"></i> Sign Out</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="profile-container">
+        <div class="profile-header">
+            <div class="profile-picture-container">
+                <div class="profile-picture-large" id="profile-picture">
+                    <div class="initials" id="profile-initials">U</div>
+                    <img id="profile-image" src="" alt="Profile Picture" style="display: none;">
+                    <div class="profile-loading" id="profile-loading">
+                        <div class="spinner"></div>
+                    </div>
+                </div>
+                <div class="edit-profile-pic" id="edit-profile-pic">
+                    <i class="fas fa-pencil-alt"></i>
+                </div>
+            </div>
+            <div class="profile-info">
+                <h1 id="profile-username">Username</h1>
+                <p id="profile-email">user@example.com</p>
+            </div>
+        </div>
+
+        <div class="profile-books">
+            <h2>My Booking List</h2>
+            <div class="book-grid" id="book-container">
+                <!-- Books will be loaded here by JavaScript -->
+            </div>
+        </div>
+
+        <button class="logout-btn" id="logout-btn">
+            <span>Log Out</span>
+            <div class="logout-loading" id="logout-loading"></div>
+        </button>
+    </div>
+
+    <!-- Profile Picture Upload Modal -->
+    <div class="modal" id="profilePicModal">
+        <div class="modal-content">
+            <span class="close-modal" id="closeProfilePicModal">&times;</span>
+            <h2 class="modal-title">Update Profile Picture</h2>
+            <input type="file" id="profile-pic-input" accept="image/*" style="display: none;">
+            <img id="profile-pic-preview" class="preview-image" src="" alt="Profile Picture Preview">
+            <div class="confirm-btns">
+                <button class="confirm-save" id="saveProfilePicBtn">Save</button>
+                <button class="confirm-cancel" id="cancelProfilePicBtn">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Upload Option Modal -->
+    <div class="modal" id="uploadOptionModal">
+        <div class="modal-content">
+            <span class="close-modal" id="closeUploadOptionModal">&times;</span>
+            <h2 class="modal-title">Choose Upload Option</h2>
+            <button class="photo-option" id="chooseFileBtn">
+                <i class="fas fa-folder-open"></i> Choose from Gallery
+            </button>
+            <button class="photo-option" id="takePhotoBtn">
+                <i class="fas fa-camera"></i> Take a Photo
+            </button>
+            <input type="file" id="profileFileInput" accept="image/*" style="display:none;">
+        </div>
+    </div>
+
+
+    <!-- Camera Modal -->
+    <div class="modal" id="cameraModal">
+        <div class="modal-content">
+            <span class="close-modal" id="closeCameraModal">&times;</span>
+            <h2 class="modal-title">Take a Photo</h2>
+            
+            <video id="cameraPreview" autoplay playsinline style="width:100%; max-height:300px; border-radius:10px;"></video>
+            <canvas id="photoCanvas" style="display:none;"></canvas>
+            
+            <div class="camera-controls" style="margin-top:10px; display:flex; gap:10px; justify-content:center;">
+                <button id="captureBtn">📸 Capture</button>
+                <button id="cancelPhotoBtn">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const profileUsername = document.getElementById('profile-username');
+            const profileEmail = document.getElementById('profile-email');
+            const bookContainer = document.getElementById('book-container');
+            const navProfileInitials = document.getElementById('nav-profile-initials');
+
+            // === PROFILE PICTURE UPLOAD LOGIC ===
+            const editProfilePicBtn = document.getElementById('edit-profile-pic');
+            const profilePicModal = document.getElementById('profilePicModal');
+            const closeProfilePicModal = document.getElementById('closeProfilePicModal');
+            const profilePicInput = document.getElementById('profile-pic-input');
+            const profilePicPreview = document.getElementById('profile-pic-preview');
+            const saveProfilePicBtn = document.getElementById('saveProfilePicBtn');
+            const cancelProfilePicBtn = document.getElementById('cancelProfilePicBtn');
+            const profileImage = document.getElementById('profile-image');
+            const profileInitials = document.getElementById('profile-initials');
+            const navProfileImage = document.getElementById('nav-profile-image');
+            const profileLoading = document.getElementById('profile-loading');
+
+            let selectedFile = null;
+
+            profilePicInput.addEventListener('change', (event) => {
+                selectedFile = event.target.files[0];
+                if (selectedFile) {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        profilePicPreview.src = e.target.result;
+                        profilePicPreview.style.display = 'block';
+                        profilePicModal.style.display = 'flex';
+                    };
+                    reader.readAsDataURL(selectedFile);
+                }
+            });
+
+            closeProfilePicModal.addEventListener('click', resetProfileModal);
+            cancelProfilePicBtn.addEventListener('click', resetProfileModal);
+
+            function resetProfileModal() {
+                profilePicModal.style.display = 'none';
+                profilePicInput.value = '';
+                selectedFile = null;
+                profilePicPreview.style.display = 'none';
+                profilePicPreview.src = '';
+            }
+
+            function dataURLtoFile(dataurl, filename) {
+                let arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
+                bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
+                while (n--) {
+                    u8arr[n] = bstr.charCodeAt(n);
+                }
+                return new File([u8arr], filename, { type: mime });
+            }
+
+            saveProfilePicBtn.addEventListener('click', () => {
+                profileLoading.style.display = 'flex';
+                profilePicModal.style.display = 'none';
+
+                let fileToUpload = null;
+
+                if (capturedImage) {
+                    // Convert base64 hasil kamera ke file
+                    fileToUpload = dataURLtoFile(capturedImage, "captured.png");
+                } else if (selectedFile) {
+                    // Kalau pilih dari file browser
+                    fileToUpload = selectedFile;
+                }
+
+                if (!fileToUpload) {
+                    alert("No image selected.");
+                    profileLoading.style.display = 'none';
+                    return;
+                }
+
+                const formData = new FormData();
+                formData.append('profile_pic', fileToUpload);
+
+                fetch('backend/upload_profile_pic.php', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(r => r.json())
+                .then(data => {
+                    profileLoading.style.display = 'none';
+                    if (data.status === 'success') {
+                        profileImage.src = data.profile_pic_path + '?' + Date.now();
+                        profileImage.style.display = 'block';
+                        profileInitials.style.display = 'none';
+
+                        navProfileImage.src = data.profile_pic_path + '?' + Date.now();
+                        navProfileImage.style.display = 'block';
+                        navProfileInitials.style.display = 'none';
+
+                        alert('Profile picture has been updated successfully!');
+                    } else {
+                        alert('Error: ' + data.message);
+                    }
+                    resetProfileModal();
+                })
+                .catch(err => {
+                    profileLoading.style.display = 'none';
+                    console.error('Upload error:', err);
+                    alert('Failed to upload profile picture. Please try again.');
+                    resetProfileModal();
+                });
+            });
+
+            const uploadOptionModal = document.getElementById('uploadOptionModal');
+            const closeUploadOptionModal = document.getElementById('closeUploadOptionModal');
+            const chooseFileBtn = document.getElementById('chooseFileBtn');
+            const takePhotoBtn = document.getElementById('takePhotoBtn');
+            const profileFileInput = document.getElementById('profileFileInput');
+
+            // Klik icon edit → buka pilihan kamera/galeri
+            editProfilePicBtn.addEventListener('click', () => {
+                uploadOptionModal.style.display = 'flex';
+            });
+
+            // Tutup modal opsi
+            closeUploadOptionModal.addEventListener('click', () => {
+                uploadOptionModal.style.display = 'none';
+            });
+
+            // Pilih gallery
+            chooseFileBtn.addEventListener('click', () => {
+                profileFileInput.click();
+            });
+
+            // Preview dari file biasa
+            profileFileInput.addEventListener('change', handleFileSelect);
+
+            function handleFileSelect(event) {
+                const file = event.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        profilePicPreview.src = e.target.result;
+                        profilePicPreview.style.display = 'block';
+                        profilePicModal.style.display = 'flex';
+                        selectedFile = file;
+                        capturedImage = null;
+                    };
+                    reader.readAsDataURL(file);
+
+                    // Tutup modal opsi setelah pilih
+                    uploadOptionModal.style.display = 'none';
+                }
+            }
+
+            const cameraModal = document.getElementById('cameraModal');
+            const closeCameraModal = document.getElementById('closeCameraModal');
+            const cameraPreview = document.getElementById('cameraPreview');
+            const photoCanvas = document.getElementById('photoCanvas');
+            const captureBtn = document.getElementById('captureBtn');
+            const cancelPhotoBtn = document.getElementById('cancelPhotoBtn');
+            let stream = null;
+            let capturedImage = null;
+
+            // Klik "Take Photo" → buka kamera
+            takePhotoBtn.addEventListener('click', async () => {
+                uploadOptionModal.style.display = 'none';
+                cameraModal.style.display = 'flex';
+
+                try {
+                    stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' }, audio: false });
+                    cameraPreview.srcObject = stream;
+                } catch (err) {
+                    alert("Tidak bisa akses kamera: " + err.message);
+                }
+            });
+
+            // Capture foto
+            captureBtn.addEventListener('click', () => {
+                const context = photoCanvas.getContext('2d');
+                photoCanvas.width = cameraPreview.videoWidth;
+                photoCanvas.height = cameraPreview.videoHeight;
+                context.drawImage(cameraPreview, 0, 0, photoCanvas.width, photoCanvas.height);
+
+                // Simpan hasil canvas ke base64
+                capturedImage = photoCanvas.toDataURL('image/png');
+
+                // Tampilkan preview di modal utama (profilePicModal)
+                profilePicPreview.src = capturedImage;
+                profilePicPreview.style.display = 'block';
+
+                // Hentikan kamera setelah capture
+                stopCamera();
+
+                // Tutup camera modal, buka modal preview untuk Save/Cancel
+                cameraModal.style.display = 'none';
+                profilePicModal.style.display = 'flex';
+
+                selectedFile = null; // supaya tidak bentrok dengan file input
+            });
+
+            // Cancel kamera
+            cancelPhotoBtn.addEventListener('click', stopCamera);
+            closeCameraModal.addEventListener('click', stopCamera);
+
+            function stopCamera() {
+                if (stream) {
+                    stream.getTracks().forEach(track => track.stop());
+                    stream = null;
+                }
+                cameraModal.style.display = 'none';
+            }
+
+
+            // === LOAD USER DATA ===
+            fetch('backend/get_user_data.php')
+                .then(r => r.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        const user = data.user;
+                        profileUsername.textContent = user.fullname;
+                        profileEmail.textContent = user.email;
+                        navProfileInitials.textContent = user.fullname.charAt(0).toUpperCase();
+                        profileInitials.textContent = user.fullname.charAt(0).toUpperCase();
+
+                        if (user.profile_pic_path) {
+                            profileImage.src = user.profile_pic_path;
+                            profileImage.style.display = 'block';
+                            profileInitials.style.display = 'none';
+
+                            navProfileImage.src = user.profile_pic_path;
+                            navProfileImage.style.display = 'block';
+                            navProfileInitials.style.display = 'none';
+                        }
+                    } else {
+                        window.location.href = 'index.html';
+                    }
+                })
+                .catch(() => window.location.href = 'index.html');
+
+            // === LOAD USER BOOKS ===
+            fetch('backend/get_user_bookings.php')
+                .then(r => r.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        displayUserBooks(data.bookings);
+                    } else {
+                        bookContainer.innerHTML = `<p style="grid-column: 1 / -1; text-align: center; color: #b3b3b3;">${data.message}</p>`;
+                    }
+                })
+                .catch(() => {
+                    bookContainer.innerHTML = '<p style="grid-column: 1 / -1; text-align: center; color: #b3b3b3;">Error loading your books.</p>';
+                });
+
+            // === TUTUP MODAL JIKA KLIK LUAR ===
+            window.addEventListener('click', (e) => {
+                if (e.target === profilePicModal) {
+                    resetProfileModal();
+                }
+            });
+
+            // === TAMPILKAN BUKU ===
+            function displayUserBooks(books) {
+                bookContainer.innerHTML = '';
+                if (books.length === 0) {
+                    bookContainer.innerHTML = '<p style="grid-column: 1 / -1; text-align: center; color: #b3b3b3;">Your booking list is empty.</p>';
+                    return;
+                }
+                books.forEach(book => {
+                    const card = document.createElement('div');
+                    card.className = 'book-card';
+                    card.innerHTML = `
+                        <div class="book"><img src="${book.cover}" alt="${book.title}"></div>
+                        <div class="book-title">${book.title}</div>
+                        <div class="book-detail-info"><strong>Borrowed Date:</strong> ${book.booking_date}</div>
+                        <div class="book-detail-info"><strong>Due Date:</strong> ${book.due_date}</div>
+                        <div class="book-detail-info"><strong>Duration:</strong> ${book.duration} Days</div>
+                    `;
+                    bookContainer.appendChild(card);
+                });
+            }
+
+            // === LOGOUT DENGAN SPINNER ===
+            const logoutBtn = document.getElementById('logout-btn');
+            const logoutLoading = document.getElementById('logout-loading');
+
+            logoutBtn.addEventListener('click', () => {
+                logoutBtn.querySelector('span').style.display = 'none';
+                logoutLoading.style.display = 'inline-block';
+                fetch('backend/logout.php')
+                    .then(() => {
+                        window.location.href = 'index.html';
+                    })
+                    .catch(() => {
+                        window.location.href = 'index.html';
+                    });
+            });
+        });
+    </script>
+</body>
+</html>
+

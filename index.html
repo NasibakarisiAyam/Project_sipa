@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bookflix Login</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        }
+        
+        body {
+            background-color: #000;
+            color: #fff;
+            background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
+                              url('https://i.ibb.co/7xtY6096/Whats-App-Image-2025-08-01-at-09-50-32-0b827bd1.jpg');
+            background-size: cover;
+            background-position: center 30%;
+            background-attachment: fixed;
+            height: 100vh;
+        }
+        
+        .logo {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            width: 150px;
+            font-size: 40px;
+            font-weight: bold;
+            color: #e50914;
+            text-decoration: none;
+        }
+        
+        .login-container {
+            background-color: rgba(0, 0, 0, 0.75);
+            width: 450px;
+            margin: 0 auto;
+            padding: 60px;
+            border-radius: 4px;
+            position: relative;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+        
+        h1 {
+            margin-bottom: 28px;
+            font-size: 32px;
+            text-align: center;
+        }
+        
+        input {
+            width: 100%;
+            padding: 16px;
+            margin-bottom: 16px;
+            border-radius: 4px;
+            border: none;
+            background-color: #333;
+            color: #fff;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+        
+        input:focus {
+            outline: none;
+            background-color: #454545;
+        }
+        
+        input::placeholder {
+            color: #8c8c8c;
+        }
+        
+        button {
+            width: 100%;
+            padding: 16px;
+            background-color: #e50914;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 24px;
+            transition: all 0.3s ease;
+        }
+        
+        button:hover {
+            background-color: #f40612;
+        }
+        
+        .remember-help {
+            display: flex;
+            justify-content: space-between;
+            color: #b3b3b3;
+            font-size: 13px;
+            margin-bottom: 40px;
+        }
+        
+        .signup-text {
+            color: #737373;
+            margin-top: 16px;
+            text-align: center;
+        }
+        
+        .signup-text a {
+            color: #fff;
+            text-decoration: none;
+        }
+        
+        .signup-text a:hover {
+            text-decoration: underline;
+        }
+        
+        .footer {
+            background-color: rgba(0, 0, 0, 0.75);
+            padding: 20px;
+            color: #737373;
+            font-size: 13px;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            text-align: center;
+        }
+
+        .password-container {
+            position: relative;
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 10px;
+            top: 16px;
+            cursor: pointer;
+            color: #8c8c8c;
+            font-size: 14px;
+            user-select: none;
+        }
+        
+        .error-message {
+            color: #e50914;
+            font-size: 13px;
+            margin-top: -10px;
+            margin-bottom: 10px;
+            display: none;
+        }
+        
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal-content {
+            background-color: #141414;
+            padding: 40px;
+            border-radius: 8px;
+            width: 400px;
+            text-align: center;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6);
+            animation: modalFadeIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border-top: 4px solid #e50914;
+        }
+        
+        .success-modal .modal-content {
+            border-top: 4px solid #2ecc71;
+        }
+        
+        @keyframes modalFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .modal h2 {
+            margin-bottom: 20px;
+            font-size: 26px;
+        }
+        
+        .error-modal h2 {
+            color: #e50914;
+        }
+        
+        .success-modal h2 {
+            color: #2ecc71;
+        }
+        
+        .modal p {
+            margin-bottom: 30px;
+            color: #ddd;
+            font-size: 16px;
+            line-height: 1.6;
+        }
+        
+        .modal-btn {
+            background-color: #e50914;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .success-modal .modal-btn {
+            background-color: #2ecc71;
+        }
+        
+        .modal-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(229, 9, 20, 0.4);
+        }
+        
+        .success-modal .modal-btn:hover {
+            box-shadow: 0 5px 15px rgba(46, 204, 113, 0.4);
+        }
+        
+        /* Loading Animation */
+        .loading-screen {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #000;
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+        
+        .loading-spinner {
+            width: 80px;
+            height: 80px;
+            border: 8px solid rgba(229, 9, 20, 0.3);
+            border-top: 8px solid #e50914;
+            border-radius: 50%;
+            animation: spin 1.5s linear infinite;
+            margin-bottom: 30px;
+        }
+        
+        .loading-text {
+            color: #fff;
+            font-size: 24px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .checkmark {
+            color: #2ecc71;
+            font-size: 60px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <a href="index.html" class="logo">BOOKFLIX</a>
+
+    <div class="login-container">
+        <h1>Login</h1>
+        <form id="loginForm">
+            <input type="text" placeholder="Username" id="username" required>
+            <div class="password-container">
+                <input type="password" id="password" placeholder="Password" required>
+                <span class="toggle-password" onclick="togglePassword()">SHOW</span>
+            </div>
+            <button type="submit">Login</button>
+            <p class="signup-text">New to Bookflix? <a href="signup.html">Sign up now</a>.</p>
+        </form>
+    </div>
+
+    <!-- Error Modal -->
+    <div class="modal error-modal" id="errorModal">
+        <div class="modal-content">
+            <h2>Login Failed</h2>
+            <p>Invalid username or password. Please try again.</p>
+            <button class="modal-btn" onclick="closeModal('errorModal')">OK</button>
+        </div>
+    </div>
+
+    <!-- bagian modal sukses -->
+    <div class="modal success-modal" id="signupSuccessModal">
+        <div class="modal-content">
+            <h2>Account Created!</h2>
+            <p>Your account has been successfully created.</p>
+            <button class="modal-btn" onclick="goToLogin()">OK</button>
+        </div>
+    </div>
+
+    <!-- Loading Screen -->
+    <div class="loading-screen" id="loadingScreen">
+        <div class="loading-spinner"></div>
+        <div class="loading-text">Loading</div>
+    </div>
+
+    <script>
+    // Toggle password
+    function togglePassword() {
+        const passwordField = document.getElementById('password');
+        const toggle = document.querySelector('.toggle-password');
+        if(passwordField.type === 'password') {
+            passwordField.type = 'text';
+            toggle.textContent = 'HIDE';
+        } else {
+            passwordField.type = 'password';
+            toggle.textContent = 'SHOW';
+        }
+    }
+
+    // Show/hide loading
+    function showLoading() { document.getElementById('loadingScreen').style.display = 'flex'; }
+    function hideLoading() { document.getElementById('loadingScreen').style.display = 'none'; }
+
+    // Show/hide modal
+    function showModal(id) { document.getElementById(id).style.display = 'flex'; }
+    function closeModal(id) { 
+        document.getElementById(id).style.display = 'none';
+    }
+
+    function goToLogin() {
+        closeModal('signupSuccessModal');
+        // Membersihkan URL dari parameter setelah modal ditutup
+        window.history.replaceState({}, document.title, window.location.pathname);
+    }
+
+    // Cek parameter URL saat halaman dimuat
+    document.addEventListener('DOMContentLoaded', () => {
+        const params = new URLSearchParams(window.location.search);
+        if (params.get('signup') === 'success') {
+            showModal('signupSuccessModal');
+        }
+    });
+
+    // Login form
+    document.getElementById('loginForm').addEventListener('submit', function(e){
+        e.preventDefault();
+        const username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
+
+        showLoading();
+
+        fetch("backend/login.php", {
+            method: "POST",
+            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+            body: `username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`
+        })
+        .then(res => res.text())
+        .then(data => {
+            hideLoading();
+            console.log("Response server:", data);
+            if(data === "success") {
+                window.location.href = 'halaman1.html?login=success'; // redirect setelah login sukses
+            } else {
+                showModal('errorModal');
+            }
+        })
+        .catch(err => { hideLoading(); alert("Error: " + err); });
+    });
+    </script>
+</body>
+</html>

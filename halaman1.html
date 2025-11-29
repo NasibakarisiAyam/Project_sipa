@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BOOKFLIX - Book Catalog</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+        }
+
+        body {
+            background-color: #141414;
+            color: white;
+            padding-top: 120px;
+        }
+
+        .navbar {
+            display: flex;
+            align-items: center;
+            padding: 20px 50px;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0) 100%);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            color: #e50914;
+            font-size: 2rem;
+            font-weight: bold;
+            margin-right: 40px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-size: 1rem;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: #b3b3b3;
+        }
+
+        .nav-links a.active {
+            font-weight: bold;
+            color: white;
+        }
+
+        .right-nav {
+            display: flex;
+            align-items: center;
+            margin-left: auto;
+            gap: 30px;
+        }
+
+        .search-container {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .search-input {
+            padding: 10px 20px;
+            padding-right: 40px;
+            border-radius: 25px;
+            border: none;
+            background-color: rgba(255,255,255,0.15);
+            color: white;
+            width: 300px;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .search-input:focus {
+            outline: none;
+            width: 350px;
+            background-color: rgba(255,255,255,0.25);
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+        }
+
+        .search-input::placeholder {
+            color: rgba(255,255,255,0.7);
+        }
+
+        .search-icon {
+            position: absolute;
+            right: 15px;
+            color: rgba(255,255,255,0.7);
+            pointer-events: none;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .profile-pic {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #e50914;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .profile-pic img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .profile-pic .initials {
+            font-weight: bold;
+            font-size: 1rem;
+        }
+
+        .profile-dropdown {
+            display: none;
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background-color: rgba(0,0,0,0.9);
+            min-width: 180px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+            border-radius: 4px;
+            overflow: hidden;
+            display: none;
+        }
+
+        .profile-dropdown a {
+            color: white;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            font-size: 0.9rem;
+            transition: background-color 0.3s;
+        }
+
+        .profile-dropdown a:hover {
+            background-color: #333;
+        }
+
+        .user-profile:hover .profile-dropdown {
+            display: block;
+        }
+
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: rgba(0,0,0,0.9);
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+            border-radius: 4px;
+        }
+
+        .dropdown-content a {
+            color: white;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            font-size: 0.9rem;
+        }
+
+        .dropdown-content a:hover {
+            background-color: #333;
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        .section {
+            padding: 30px 50px;
+        }
+
+        .section h2 {
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+        }
+
+        .book-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 25px;
+            width: 100%;
+        }
+
+        .book-card {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            transition: transform 0.3s;
+            cursor: pointer;
+        }
+
+        .book-card:hover {
+            transform: scale(1.05);
+        }
+
+        .book {
+            width: 100%;
+            height: 300px;
+        }
+
+        .book img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 4px;
+        }
+
+        .book-title {
+            font-size: 0.9rem;
+            text-align: center;
+            margin-top: 5px;
+            line-height: 1.3;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .book-detail-modal, .success-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.8);
+            z-index: 1000;
+            overflow-y: auto;
+            justify-content: center;
+            align-items: center;
+            padding: 40px 20px; 
+        }
+
+        .modal-content {
+            display: flex;
+            background-color: #181818;
+            margin: auto;
+            max-width: 1000px;
+            border-radius: 8px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .success-modal .modal-content {
+             display: block;
+             max-width: 400px;
+             padding: 40px;
+             text-align: center;
+        }
+
+        .modal-left {
+            flex: 1;
+        }
+
+        .modal-left img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .modal-right {
+            flex: 1;
+            padding: 40px;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            color: white;
+            font-size: 30px;
+            cursor: pointer;
+        }
+
+        .close-btn:hover {
+            color: #e50914;
+        }
+
+        .remind-me {
+            background-color: #e50914;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 20px 0;
+            transition: background-color 0.3s;
+        }
+
+        .remind-me:hover {
+            background-color: #f40612;
+        }
+        
+        .success-modal h2 {
+            color: #2ecc71;
+            margin-bottom: 20px;
+        }
+        
+        .success-modal p {
+            margin-bottom: 20px;
+        }
+        
+        .success-modal .modal-btn {
+            background-color: #2ecc71;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .release-date {
+            color: #777;
+            margin-bottom: 20px;
+        }
+
+        .details {
+            margin: 20px 0;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .details div {
+            margin-bottom: 10px;
+        }
+
+        .recommended-books h3 {
+            margin: 30px 0 15px;
+        }
+
+        .recommended-carousel {
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+            padding-bottom: 10px;
+        }
+
+        .recommended-carousel .book {
+            width: 120px;
+            height: 180px;
+            flex: 0 0 auto;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .recommended-carousel .book:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+        }
+
+        .card-booking-btn {
+            background-color: #e50914;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            font-size: 0.8rem;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 5px;
+            width: 100%;
+            transition: background-color 0.3s;
+        }
+
+        .card-booking-btn:hover {
+            background-color: #f40612;
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <div class="logo">BOOKFLIX</div>
+        <div class="nav-links">
+            <a href="#" class="active" id="home-link">Home</a>
+            <div class="dropdown">
+                <a href="#" id="genre-link">Genre <i class="fas fa-caret-down"></i></a>
+                <div class="dropdown-content">
+                    <a href="#" data-genre="all">All Genres</a>
+                    <a href="#" data-genre="horror">Horror</a>
+                    <a href="#" data-genre="romance">Romance</a>
+                    <a href="#" data-genre="fantasy">Fantasy</a>
+                    <a href="#" data-genre="thriller">Thriller</a>
+                </div>
+            </div>
+            <a href="#" id="popular-link">Popular</a>
+            <a href="halaman1.html" id="mylist-link">My List</a>
+        </div>
+        <div class="right-nav">
+            <div class="search-container">
+                <input type="text" class="search-input" placeholder="Search books..." id="search-input">
+                <i class="fas fa-search search-icon"></i>
+            </div>
+            <div class="user-profile">
+                <div class="profile-pic">
+                    <img id="nav-profile-image" src="uploads/profile_pics/default.png" alt="Profile" style="display:none;">
+                    <div class="initials" id="nav-profile-initials">U</div>
+                </div>
+                <div class="profile-dropdown">
+                    <a href="profile.html"><i class="fas fa-user"></i> Profile</a>
+                    <a href="#" id="settings-link"><i class="fas fa-cog"></i> Settings</a>
+                    <a href="backend/logout.php"><i class="fas fa-sign-out-alt"></i> Sign Out</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2 id="collection-title">All Books</h2>
+        <div class="book-grid" id="book-container">
+            <!-- Books will be loaded here by JavaScript -->
+        </div>
+    </div>
+
+    <div class="book-detail-modal" id="bookModal">
+        <div class="modal-content">
+            <span class="close-btn">&times;</span>
+            <div class="modal-left">
+                <img id="modal-book-cover" src="" alt="Book Cover">
+            </div>
+            <div class="modal-right">
+                <h1 id="modal-book-title"></h1>
+                <button class="remind-me" id="booking-button">Booking</button>
+                <button class="remind-me" id="add-to-mylist-button" style="margin-left: 10px;">+ My List</button>
+                <div class="release-date">Published: <span id="modal-release-date"></span></div>
+                <p id="modal-book-synopsis"></p>
+                <div class="details">
+                    <div><strong>Author:</strong> <span id="modal-book-author"></span></div>
+                    <div><strong>Published:</strong> <span id="modal-book-year"></span></div>
+                    <div><strong>Rating:</strong> <span id="modal-book-rating"></span></div>
+                    <div><strong>Genre:</strong> <span id="modal-book-genre"></span></div>
+                </div>
+                <div class="recommended-books">
+                    <h3>Recommended Books</h3>
+                    <div class="recommended-carousel">
+                        <!-- Recommended books will be added here by JavaScript -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Booking Success Modal -->
+    <div class="success-modal" id="bookingSuccessModal">
+        <div class="modal-content">
+            <h2>Booking Succesful</h2>
+            <p>The book has been successfully borrowed. Check your profile for details.</p>
+            <p><strong>Book Title:</strong> <span id="modal-booked-book-title"></span></p>
+            <p><strong>Borrowed Date:</strong> <span id="modal-booked-booking-date"></span></p>
+            <p><strong>Due Date:</strong> <span id="modal-booked-due-date"></span></p>
+            <p><strong>Duration:</strong> <span id="modal-booked-duration"></span></p>
+            <button class="modal-btn" id="closeSuccessModal">OK</button>
+        </div>
+    </div>
+        
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Global variable to hold all book data from the database
+            let books = [];
+
+            // DOM Elements
+            const bookContainer = document.getElementById('book-container');
+            const collectionTitle = document.getElementById('collection-title');
+            const modal = document.getElementById('bookModal');
+            const closeBtn = document.querySelector('.close-btn');
+            const bookTitle = document.getElementById('modal-book-title');
+            const bookCover = document.getElementById('modal-book-cover');
+            const releaseDate = document.getElementById('modal-release-date');
+            const bookSynopsis = document.getElementById('modal-book-synopsis');
+            const bookAuthor = document.getElementById('modal-book-author');
+            const bookYear = document.getElementById('modal-book-year');
+            const bookRating = document.getElementById('modal-book-rating');
+            const bookGenre = document.getElementById('modal-book-genre');
+            const recommendedCarousel = document.querySelector('.recommended-carousel');
+            const genreLinks = document.querySelectorAll('.dropdown-content a');
+            const searchInput = document.getElementById('search-input');
+            const bookingButton = document.getElementById('booking-button');
+            
+            let currentBookId = null; // Variable to store the ID of the currently viewed book
+
+            // Function to display books
+            function displayBooks(booksToDisplay) {
+                bookContainer.innerHTML = '';
+                if (!booksToDisplay || booksToDisplay.length === 0) {
+                    bookContainer.innerHTML = '<p>No books available.</p>';
+                    return;
+                }
+                booksToDisplay.forEach(book => {
+                    const bookCard = document.createElement('div');
+                    bookCard.className = 'book-card';
+                    bookCard.setAttribute('data-id', book.id);
+                    
+                    const bookElement = document.createElement('div');
+                    bookElement.className = 'book';
+                    bookElement.innerHTML = `<img src="${book.cover}" alt="${book.title}">`;
+                    
+                    const titleElement = document.createElement('div');
+                    titleElement.className = 'book-title';
+                    titleElement.textContent = book.title;
+                    
+                    bookCard.appendChild(bookElement);
+                    bookCard.appendChild(titleElement);
+                    bookContainer.appendChild(bookCard);
+                });
+            }
+
+            // Function to open book modal
+            function openBookModal(bookId) {
+                const selectedBook = books.find(b => b.id === bookId);
+                
+                if (selectedBook) {
+                    currentBookId = selectedBook.id;
+                    bookTitle.textContent = selectedBook.title;
+                    bookCover.src = selectedBook.cover;
+                    bookCover.alt = selectedBook.title;
+                    releaseDate.textContent = selectedBook.year;
+                    bookSynopsis.textContent = selectedBook.synopsis;
+                    bookAuthor.textContent = selectedBook.author;
+                    bookYear.textContent = selectedBook.year;
+                    bookRating.textContent = selectedBook.rating;
+                    bookGenre.textContent = selectedBook.genre;
+                    
+                    recommendedCarousel.innerHTML = '';
+                    const recommendedBooks = getRandomRecommendations(bookId);
+                    recommendedBooks.forEach(recommendedBook => {
+                        const recommendedBookElement = document.createElement('div');
+                        recommendedBookElement.className = 'book';
+                        recommendedBookElement.setAttribute('data-id', recommendedBook.id);
+                        recommendedBookElement.innerHTML = `<img src="${recommendedBook.cover}" alt="${recommendedBook.title}">`;
+                        recommendedCarousel.appendChild(recommendedBookElement);
+                    });
+                    
+                    modal.style.display = 'flex';
+                    document.body.style.overflow = 'hidden';
+                }
+            }
+
+            function getRandomRecommendations(currentBookId, count = 3) {
+                const availableBooks = books.filter(book => book.id !== currentBookId);
+                const shuffled = [...availableBooks].sort(() => 0.5 - Math.random());
+                return shuffled.slice(0, count);
+            }
+
+            function searchBooks(query) {
+                const filteredBooks = books.filter(book => 
+                    book.title.toLowerCase().includes(query.toLowerCase()) ||
+                    (book.author && book.author.toLowerCase().includes(query.toLowerCase()))
+                );
+                displayBooks(filteredBooks);
+                collectionTitle.textContent = query ? `Search Results for "${query}"` : 'All Books';
+            }
+
+            function setupEventListeners() {
+                genreLinks.forEach(link => {
+                    link.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        const genre = this.getAttribute('data-genre');
+                        genreLinks.forEach(l => l.classList.remove('active'));
+                        this.classList.add('active');
+                        
+                        if (genre === 'all') {
+                            collectionTitle.textContent = 'All Books';
+                            const shuffledBooks = [...books].sort(() => 0.5 - Math.random());
+                            displayBooks(shuffledBooks);
+                        } else {
+                            collectionTitle.textContent = `${genre.charAt(0).toUpperCase() + genre.slice(1)} Collection`;
+                            const filteredBooks = books.filter(book => book.genre.toLowerCase() === genre);
+                            displayBooks(filteredBooks);
+                        }
+                    });
+                });
+
+                searchInput.addEventListener('input', function() {
+                    searchBooks(this.value);
+                });
+
+                document.addEventListener('click', function(e) {
+                     // Handle booking button on card
+                    if (e.target.classList.contains('card-booking-btn')) {
+                        e.stopPropagation(); // Prevent modal from opening
+                        const bookId = parseInt(e.target.getAttribute('data-id'));
+                        if (bookId) {
+                            window.location.href = `booking.html?book_id=${bookId}`;
+                        }
+                        return; // Stop further processing
+                    }
+
+                    if (e.target.closest('.book-card')) {
+                        const bookCard = e.target.closest('.book-card');
+                        const bookId = parseInt(bookCard.getAttribute('data-id'));
+                        openBookModal(bookId);
+                    }
+                    else if (e.target.closest('.recommended-carousel .book')) {
+                        const recommendedBook = e.target.closest('.book');
+                        const bookId = parseInt(recommendedBook.getAttribute('data-id'));
+                        openBookModal(bookId);
+                    }
+                });
+
+                closeBtn.addEventListener('click', function() {
+                    modal.style.display = 'none';
+                    document.body.style.overflow = 'auto';
+                });
+
+                window.addEventListener('click', function(event) {
+                    if (event.target === modal) {
+                        modal.style.display = 'none';
+                        document.body.style.overflow = 'auto';
+                    }
+                });
+
+                document.getElementById('home-link').addEventListener('click', function(e) {
+                    e.preventDefault();
+                    collectionTitle.textContent = 'All Books';
+                    const shuffledBooks = [...books].sort(() => 0.5 - Math.random());
+                    displayBooks(shuffledBooks);
+                });
+
+                document.getElementById('popular-link').addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const sortedBooks = [...books].sort((a, b) => parseFloat(b.rating) - parseFloat(a.rating));
+                    displayBooks(sortedBooks);
+                    collectionTitle.textContent = 'Popular Books';
+                });
+
+                document.getElementById('mylist-link').addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    fetch('backend/get_mylist.php')
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.status === 'success') {
+                                displayBooks(data.my_list);
+                                collectionTitle.textContent = 'My List';
+                            } else {
+                                console.error('Error fetching my list:', data.message);
+                                bookContainer.innerHTML = `<p>${data.message}</p>`;
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error fetching my list:', error);
+                            bookContainer.innerHTML = '<p>Error loading your list. Please try again later.</p>';
+                        });
+                });
+
+                bookingButton.addEventListener('click', function() {
+                    if (currentBookId) {
+                        window.location.href = `booking.html?book_id=${currentBookId}`;
+                    } else {
+                        alert('Could not get book ID. Please try again.');
+                    }
+                });
+
+                document.getElementById('add-to-mylist-button').addEventListener('click', function() {
+                    if (currentBookId) {
+                        fetch('backend/add_to_mylist.php', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/x-www-form-urlencoded',
+                            },
+                            body: `book_id=${currentBookId}`
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.status === 'success') {
+                                alert(data.message); // Or show a more elegant notification
+                            } else {
+                                alert(data.message);
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error adding to my list:', error);
+                            alert('Failed to add book to your list. Please try again.');
+                        });
+                    } else {
+                        alert('No book selected to add to list.');
+                    }
+                });
+            }
+
+            function handleURLParams() {
+                const successModal = document.getElementById('bookingSuccessModal');
+                const closeSuccessModalBtn = document.getElementById('closeSuccessModal');
+
+                const params = new URLSearchParams(window.location.search);
+                if (params.get('booking') === 'success') {
+                    const bookTitle = decodeURIComponent(params.get('book_title'));
+                    const bookingDate = params.get('booking_date');
+                    const dueDate = params.get('due_date');
+                    const status = decodeURIComponent(params.get('status'));
+
+                    document.getElementById('modal-booked-book-title').textContent = bookTitle;
+                    document.getElementById('modal-booked-booking-date').textContent = bookingDate;
+                    document.getElementById('modal-booked-due-date').textContent = dueDate;
+                    document.getElementById("modal-booked-duration").textContent = params.get("duration") + " Days";
+                    
+                    document.getElementById("bookingSuccessModal").style.display = "flex";
+                }
+
+                closeSuccessModalBtn.addEventListener('click', () => {
+                    successModal.style.display = 'none';
+                    window.history.replaceState({}, document.title, window.location.pathname);
+                });
+            }
+
+            // Main execution: Check session first, then fetch data and initialize
+            fetch('backend/check_session.php')
+                .then(response => response.json())
+                .then(sessionData => {
+                    if (sessionData.status === 'success') {
+                        const initialsEl = document.getElementById('nav-profile-initials');
+                        const imgEl = document.getElementById('nav-profile-image');
+
+                        // Set initial huruf depan nama
+                        initialsEl.textContent = sessionData.user.fullname.charAt(0).toUpperCase();
+
+                        if (sessionData.user.profile_pic_path && sessionData.user.profile_pic_path !== "uploads/profile_pics/default.png") {
+                            imgEl.src = sessionData.user.profile_pic_path + "?" + Date.now();
+                            imgEl.style.display = "block";
+                            initialsEl.style.display = "none";
+                        } else {
+                            imgEl.style.display = "none";
+                            initialsEl.style.display = "flex";
+                        }
+                        fetch('backend/get_books.php')
+                            .then(response => response.json())
+                            .then(data => {
+                                if(data.status === 'success'){
+                                    books = data.books;
+                                    // Use a timeout to ensure the DOM is ready
+                                    setTimeout(() => {
+                                        const shuffledBooks = [...books].sort(() => 0.5 - Math.random());
+                                        displayBooks(shuffledBooks);
+                                        setupEventListeners();
+                                        handleURLParams();
+                                    }, 0);
+                                } else {
+                                    bookContainer.innerHTML = `<p>${data.message}</p>`;
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Error fetching book data:', error);
+                                bookContainer.innerHTML = '<p>Error loading books. Please try again later.</p>';
+                            });
+                    } else {
+                        // User not logged in, redirect to login page
+                        window.location.href = 'index.html';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error checking session:', error);
+                    bookContainer.innerHTML = '<p>Session check failed. Please try again later.</p>';
+                });
+        });
+    </script>
+</body>
+</html>

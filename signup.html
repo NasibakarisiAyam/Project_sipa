@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bookflix Sign Up</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        }
+        
+        body {
+            background-color: #000;
+            color: #fff;
+            background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
+                              url('https://i.ibb.co/7xtY6096/Whats-App-Image-2025-08-01-at-09-50-32-0b827bd1.jpg');
+            background-size: cover;
+            background-position: center 30%;
+            background-attachment: fixed;
+            height: 100vh;
+        }
+        
+        .logo {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            width: 150px;
+            font-size: 40px;
+            font-weight: bold;
+            color: #e50914;
+            text-decoration: none;
+        }
+        
+        .signup-container {
+            background-color: rgba(0, 0, 0, 0.75);
+            width: 450px;
+            margin: 0 auto;
+            padding: 60px;
+            border-radius: 4px;
+            position: relative;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+        
+        h1 {
+            margin-bottom: 28px;
+            font-size: 32px;
+            text-align: center;
+        }
+        
+        input {
+            width: 100%;
+            padding: 16px;
+            margin-bottom: 16px;
+            border-radius: 4px;
+            border: none;
+            background-color: #333;
+            color: #fff;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+        
+        input:focus {
+            outline: none;
+            background-color: #454545;
+        }
+        
+        input::placeholder {
+            color: #8c8c8c;
+        }
+        
+        button {
+            width: 100%;
+            padding: 16px;
+            background-color: #e50914;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 24px;
+            transition: all 0.3s ease;
+        }
+        
+        button:hover {
+            background-color: #f40612;
+        }
+        
+        .login-text {
+            color: #737373;
+            margin-top: 16px;
+            text-align: center;
+        }
+        
+        .login-text a {
+            color: #fff;
+            text-decoration: none;
+        }
+        
+        .login-text a:hover {
+            text-decoration: underline;
+        }
+        
+        .footer {
+            background-color: rgba(0, 0, 0, 0.75);
+            padding: 20px;
+            color: #737373;
+            font-size: 13px;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            text-align: center;
+        }
+
+        .password-container {
+            position: relative;
+            margin-bottom: 5px;
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 10px;
+            top: 16px;
+            cursor: pointer;
+            color: #8c8c8c;
+            font-size: 14px;
+            user-select: none;
+        }
+        
+        .error-message {
+            color: #e50914;
+            font-size: 13px;
+            margin-top: -10px;
+            margin-bottom: 10px;
+            display: none;
+        }
+        
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal-content {
+            background-color: #141414;
+            padding: 40px;
+            border-radius: 8px;
+            width: 400px;
+            text-align: center;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6);
+            animation: modalFadeIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border-top: 4px solid #e50914;
+        }
+        
+        @keyframes modalFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .modal h2 {
+            color: #e50914;
+            margin-bottom: 20px;
+            font-size: 26px;
+        }
+        
+        .modal p {
+            margin-bottom: 30px;
+            color: #ddd;
+            font-size: 16px;
+            line-height: 1.6;
+        }
+        
+        .modal-btn {
+            background-color: #e50914;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .modal-btn:hover {
+            background-color: #f40612;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(229, 9, 20, 0.4);
+        }
+        
+        /* Loading Animation */
+        .loading-screen {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #000;
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+        
+        .loading-spinner {
+            width: 80px;
+            height: 80px;
+            border: 8px solid rgba(229, 9, 20, 0.3);
+            border-top: 8px solid #e50914;
+            border-radius: 50%;
+            animation: spin 1.5s linear infinite;
+            margin-bottom: 30px;
+        }
+        
+        .loading-text {
+            color: #fff;
+            font-size: 24px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <a href="index.html" class="logo">BOOKFLIX</a>
+    <div class="signup-container">
+        <h1>Create Account</h1>
+        <form id="signupForm">
+            <input type="text" placeholder="Full Name" id="fullname" required>
+            <input type="text" placeholder="Username" id="username" required>
+            <input type="email" placeholder="Email" id="email" required>
+            <div class="error-message" id="emailError">Email must end with @gmail.com</div>
+            <input type="text" placeholder="NIS (Student ID)" id="nis" required>
+            
+            <div class="password-container">
+                <input type="password" id="password" placeholder="Password" required>
+                <span class="toggle-password" onclick="togglePassword('password')">SHOW</span>
+            </div>
+            
+            <div class="password-container">
+                <input type="password" id="confirmPassword" placeholder="Confirm Password" required>
+                <span class="toggle-password" onclick="togglePassword('confirmPassword')">SHOW</span>
+            </div>
+            
+            <button type="submit">Sign Up</button>
+            
+            <p class="login-text">Already have an account? <a href="index.html">Login now</a>.</p>
+        </form>
+    </div>
+    
+    <!-- Password Mismatch Modal -->
+    <div class="modal" id="passwordMismatchModal">
+        <div class="modal-content">
+            <h2>Password Mismatch</h2>
+            <p>The passwords you entered do not match. Please try again.</p>
+            <button class="modal-btn" onclick="closeModal('passwordMismatchModal')">OK</button>
+        </div>
+    </div>
+
+    <!-- Account Exists Modal -->
+    <div class="modal" id="accountExistsModal">
+        <div class="modal-content">
+            <h2><i class="fas fa-exclamation-circle"></i>Account Exists</h2>
+            <p>Username, Email, or NIS already exists! Please try a different one.</p>
+            <button class="modal-btn" onclick="closeModal('accountExistsModal')">OK</button>
+        </div>
+    </div>
+
+    <!-- Loading Screen -->
+    <div class="loading-screen" id="loadingScreen">
+        <div class="loading-spinner"></div>
+        <div class="loading-text">Creating Account</div>
+    </div>
+    
+    <div class="footer">
+        Questions? Call 0822-5240-9633
+    </div>
+
+    <script>
+        function togglePassword(fieldId) {
+            const passwordField = document.getElementById(fieldId);
+            const toggleButton = passwordField.nextElementSibling;
+            
+            if (passwordField.type === 'password') {
+                passwordField.type = 'text';
+                toggleButton.textContent = 'HIDE';
+            } else {
+                passwordField.type = 'password';
+                toggleButton.textContent = 'SHOW';
+            }
+        }
+        
+        function showModal(modalId) {
+            document.getElementById(modalId).style.display = 'flex';
+        }
+        
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+        
+        function showLoading() {
+            document.getElementById('loadingScreen').style.display = 'flex';
+        }
+        
+        function hideLoading() {
+            document.getElementById('loadingScreen').style.display = 'none';
+        }
+        
+        document.getElementById('signupForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Get form values
+            const fullname = document.getElementById('fullname').value;
+            const username = document.getElementById('username').value;
+            const email = document.getElementById('email').value;
+            const nis = document.getElementById('nis').value;
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            const emailError = document.getElementById('emailError');
+            
+            // Validate email
+            if (!email.toLowerCase().endsWith('@gmail.com')) {
+                emailError.style.display = 'block';
+                return false;
+            }
+            
+            // Validate password match
+            if (password !== confirmPassword) {
+                showModal('passwordMismatchModal');
+                return false;
+            }
+            
+            // Show loading screen
+            showLoading();
+
+            fetch("backend/signup.php", {
+                method: "POST",
+                headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                body: new URLSearchParams({
+                    fullname,
+                    username,
+                    email,
+                    nis,
+                    password
+                })
+            })
+            .then(res => res.json())
+            .then(data => {
+                hideLoading();
+                if (data.status === "exists") {
+                    showModal('accountExistsModal');
+                } else if (data.status === "success") {
+                    window.location.href = 'index.html?signup=success';
+                } else {
+                    alert("Error: " + data.message);
+                }
+            })
+            .catch(err => {
+                hideLoading();
+                alert("Terjadi kesalahan: " + err);
+            });
+        });
+        
+        // Hide error message when user starts typing in email field
+        document.getElementById('email').addEventListener('input', function() {
+            document.getElementById('emailError').style.display = 'none';
+        });
+    </script>
+</body>
+</html>
